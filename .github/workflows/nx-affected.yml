@@ -29,13 +29,14 @@ jobs:
       - run: npm run nx run-many -- --target=test --all
       - run: npm run nx run-many -- --target=e2e --all
 
-      - name: Upload
+      - name: Upload screenshots
         uses: actions/upload-artifact@v1
         if: failure()
         with:
           name: cypress-screenshots
           path: dist/cypress
       # Test run video was always captured, so this action uses "always()" condition
+      - name: Upload videos
         uses: actions/upload-artifact@v1
         if: always()
         with:
