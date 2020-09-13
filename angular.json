@@ -1,619 +1,532 @@
 {
-  "version": 1,
-  "projects": {
-    "knoxpass": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/knoxpass",
-      "sourceRoot": "apps/knoxpass/src",
-      "prefix": "knoxpass",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/knoxpass",
-            "index": "apps/knoxpass/src/index.html",
-            "main": "apps/knoxpass/src/main.ts",
-            "polyfills": "apps/knoxpass/src/polyfills.ts",
-            "tsConfig": "apps/knoxpass/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              "apps/knoxpass/src/favicon.ico",
-              "apps/knoxpass/src/assets"
-            ],
-            "styles": ["apps/knoxpass/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/knoxpass/src/environments/environment.ts",
-                  "with": "apps/knoxpass/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "knoxpass:build",
-            "proxyConfig": "apps/knoxpass/proxy.conf.json"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "knoxpass:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "knoxpass:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/knoxpass/tsconfig.app.json",
-              "apps/knoxpass/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/knoxpass/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/knoxpass/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "knoxpass-e2e": {
-      "root": "apps/knoxpass-e2e",
-      "sourceRoot": "apps/knoxpass-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/knoxpass-e2e/cypress.json",
-            "tsConfig": "apps/knoxpass-e2e/tsconfig.e2e.json",
-            "devServerTarget": "knoxpass:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "knoxpass:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/knoxpass-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/knoxpass-e2e/**/*"]
-          }
-        }
-      }
-    },
-    "api": {
-      "root": "apps/api",
-      "sourceRoot": "apps/api/src",
-      "projectType": "application",
-      "prefix": "api",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "outputPath": "dist/apps/api",
-            "main": "apps/api/src/main.ts",
-            "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": ["apps/api/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/api/src/environments/environment.ts",
-                  "with": "apps/api/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "api:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/api/tsconfig.app.json",
-              "apps/api/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/api/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/api/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "api-interfaces": {
-      "root": "libs/api-interfaces",
-      "sourceRoot": "libs/api-interfaces/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/api-interfaces/tsconfig.lib.json",
-              "libs/api-interfaces/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/api-interfaces/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/api-interfaces/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "knoxpass-app": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/knoxpass-app",
-      "sourceRoot": "apps/knoxpass-app/src",
-      "prefix": "knoxpass",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/knoxpass-app",
-            "index": "apps/knoxpass-app/src/index.html",
-            "main": "apps/knoxpass-app/src/main.ts",
-            "polyfills": "apps/knoxpass-app/src/polyfills.ts",
-            "tsConfig": "apps/knoxpass-app/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              "apps/knoxpass-app/src/favicon.ico",
-              "apps/knoxpass-app/src/assets"
-            ],
-            "styles": ["apps/knoxpass-app/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/knoxpass-app/src/environments/environment.ts",
-                  "with": "apps/knoxpass-app/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "knoxpass-app:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "knoxpass-app:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "knoxpass-app:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/knoxpass-app/tsconfig.app.json",
-              "apps/knoxpass-app/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/knoxpass-app/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/knoxpass-app/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "knoxpass-app-e2e": {
-      "root": "apps/knoxpass-app-e2e",
-      "sourceRoot": "apps/knoxpass-app-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/knoxpass-app-e2e/cypress.json",
-            "tsConfig": "apps/knoxpass-app-e2e/tsconfig.e2e.json",
-            "devServerTarget": "knoxpass-app:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "knoxpass-app:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/knoxpass-app-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/knoxpass-app-e2e/**/*"]
-          }
-        }
-      }
-    },
-    "knoxpass-extension": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/knoxpass-extension",
-      "sourceRoot": "apps/knoxpass-extension/src",
-      "prefix": "knoxpass",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/knoxpass-extension",
-            "index": "apps/knoxpass-extension/src/index.html",
-            "main": "apps/knoxpass-extension/src/main.ts",
-            "polyfills": "apps/knoxpass-extension/src/polyfills.ts",
-            "tsConfig": "apps/knoxpass-extension/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              "apps/knoxpass-extension/src/favicon.ico",
-              "apps/knoxpass-extension/src/assets"
-            ],
-            "styles": ["apps/knoxpass-extension/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/knoxpass-extension/src/environments/environment.ts",
-                  "with": "apps/knoxpass-extension/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "knoxpass-extension:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "knoxpass-extension:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "knoxpass-extension:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/knoxpass-extension/tsconfig.app.json",
-              "apps/knoxpass-extension/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/knoxpass-extension/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/knoxpass-extension/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "knoxpass-extension-e2e": {
-      "root": "apps/knoxpass-extension-e2e",
-      "sourceRoot": "apps/knoxpass-extension-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/knoxpass-extension-e2e/cypress.json",
-            "tsConfig": "apps/knoxpass-extension-e2e/tsconfig.e2e.json",
-            "devServerTarget": "knoxpass-extension:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "knoxpass-extension:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/knoxpass-extension-e2e/tsconfig.e2e.json"],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/knoxpass-extension-e2e/**/*"
-            ]
-          }
-        }
-      }
-    },
-    "knoxpass-landing": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/knoxpass-landing",
-      "sourceRoot": "apps/knoxpass-landing/src",
-      "prefix": "knoxpass",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/knoxpass-landing",
-            "index": "apps/knoxpass-landing/src/index.html",
-            "main": "apps/knoxpass-landing/src/main.ts",
-            "polyfills": "apps/knoxpass-landing/src/polyfills.ts",
-            "tsConfig": "apps/knoxpass-landing/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              "apps/knoxpass-landing/src/favicon.ico",
-              "apps/knoxpass-landing/src/assets"
-            ],
-            "styles": ["apps/knoxpass-landing/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/knoxpass-landing/src/environments/environment.ts",
-                  "with": "apps/knoxpass-landing/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "knoxpass-landing:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "knoxpass-landing:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "knoxpass-landing:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/knoxpass-landing/tsconfig.app.json",
-              "apps/knoxpass-landing/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/knoxpass-landing/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/knoxpass-landing/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "knoxpass-landing-e2e": {
-      "root": "apps/knoxpass-landing-e2e",
-      "sourceRoot": "apps/knoxpass-landing-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/knoxpass-landing-e2e/cypress.json",
-            "tsConfig": "apps/knoxpass-landing-e2e/tsconfig.e2e.json",
-            "devServerTarget": "knoxpass-landing:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "knoxpass-landing:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/knoxpass-landing-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/knoxpass-landing-e2e/**/*"]
-          }
-        }
-      }
-    }
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/angular"
-  },
-  "schematics": {
-    "@nrwl/workspace": {
-      "library": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/cypress": {
-      "cypress-project": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/node": {
-      "application": {
-        "linter": "tslint"
-      },
-      "library": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/nest": {
-      "application": {
-        "linter": "tslint"
-      },
-      "library": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/express": {
-      "application": {
-        "linter": "tslint"
-      },
-      "library": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/angular:application": {
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
-    },
-    "@nrwl/angular:library": {
-      "unitTestRunner": "jest"
-    }
-  },
-  "defaultProject": "knoxpass"
+	"version": 1,
+	"projects": {
+		"api": {
+			"root": "apps/api",
+			"sourceRoot": "apps/api/src",
+			"projectType": "application",
+			"prefix": "api",
+			"schematics": {},
+			"architect": {
+				"build": {
+					"builder": "@nrwl/node:build",
+					"options": {
+						"outputPath": "dist/apps/api",
+						"main": "apps/api/src/main.ts",
+						"tsConfig": "apps/api/tsconfig.app.json",
+						"assets": [
+							"apps/api/src/assets"
+						]
+					},
+					"configurations": {
+						"production": {
+							"optimization": true,
+							"extractLicenses": true,
+							"inspect": false,
+							"fileReplacements": [
+								{
+									"replace": "apps/api/src/environments/environment.ts",
+									"with": "apps/api/src/environments/environment.prod.ts"
+								}
+							]
+						}
+					}
+				},
+				"serve": {
+					"builder": "@nrwl/node:execute",
+					"options": {
+						"buildTarget": "api:build"
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"apps/api/tsconfig.app.json",
+							"apps/api/tsconfig.spec.json"
+						],
+						"exclude": [
+							"**/node_modules/**",
+							"!apps/api/**/*"
+						]
+					}
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"options": {
+						"jestConfig": "apps/api/jest.config.js",
+						"passWithNoTests": true
+					}
+				}
+			}
+		},
+		"api-interfaces": {
+			"root": "libs/api-interfaces",
+			"sourceRoot": "libs/api-interfaces/src",
+			"projectType": "library",
+			"schematics": {},
+			"architect": {
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"libs/api-interfaces/tsconfig.lib.json",
+							"libs/api-interfaces/tsconfig.spec.json"
+						],
+						"exclude": [
+							"**/node_modules/**",
+							"!libs/api-interfaces/**/*"
+						]
+					}
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"options": {
+						"jestConfig": "libs/api-interfaces/jest.config.js",
+						"passWithNoTests": true
+					}
+				}
+			}
+		},
+		"knoxpass-app": {
+			"projectType": "application",
+			"schematics": {
+				"@schematics/angular:component": {
+					"style": "scss"
+				}
+			},
+			"root": "apps/knoxpass-app",
+			"sourceRoot": "apps/knoxpass-app/src",
+			"prefix": "knoxpass",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"options": {
+						"outputPath": "dist/apps/knoxpass-app",
+						"index": "apps/knoxpass-app/src/index.html",
+						"main": "apps/knoxpass-app/src/main.ts",
+						"polyfills": "apps/knoxpass-app/src/polyfills.ts",
+						"tsConfig": "apps/knoxpass-app/tsconfig.app.json",
+						"aot": true,
+						"assets": [
+							"apps/knoxpass-app/src/favicon.ico",
+							"apps/knoxpass-app/src/assets"
+						],
+						"styles": [
+							"apps/knoxpass-app/src/styles.scss"
+						],
+						"scripts": []
+					},
+					"configurations": {
+						"production": {
+							"fileReplacements": [
+								{
+									"replace": "apps/knoxpass-app/src/environments/environment.ts",
+									"with": "apps/knoxpass-app/src/environments/environment.prod.ts"
+								}
+							],
+							"optimization": true,
+							"outputHashing": "all",
+							"sourceMap": false,
+							"extractCss": true,
+							"namedChunks": false,
+							"extractLicenses": true,
+							"vendorChunk": false,
+							"buildOptimizer": true,
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "2mb",
+									"maximumError": "5mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "6kb",
+									"maximumError": "10kb"
+								}
+							]
+						}
+					}
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"options": {
+						"browserTarget": "knoxpass-app:build"
+					},
+					"configurations": {
+						"production": {
+							"browserTarget": "knoxpass-app:build:production"
+						}
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n",
+					"options": {
+						"browserTarget": "knoxpass-app:build"
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"apps/knoxpass-app/tsconfig.app.json",
+							"apps/knoxpass-app/tsconfig.spec.json"
+						],
+						"exclude": [
+							"**/node_modules/**",
+							"!apps/knoxpass-app/**/*"
+						]
+					}
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"options": {
+						"jestConfig": "apps/knoxpass-app/jest.config.js",
+						"passWithNoTests": true
+					}
+				}
+			}
+		},
+		"knoxpass-app-e2e": {
+			"root": "apps/knoxpass-app-e2e",
+			"sourceRoot": "apps/knoxpass-app-e2e/src",
+			"projectType": "application",
+			"architect": {
+				"e2e": {
+					"builder": "@nrwl/cypress:cypress",
+					"options": {
+						"cypressConfig": "apps/knoxpass-app-e2e/cypress.json",
+						"tsConfig": "apps/knoxpass-app-e2e/tsconfig.e2e.json",
+						"devServerTarget": "knoxpass-app:serve"
+					},
+					"configurations": {
+						"production": {
+							"devServerTarget": "knoxpass-app:serve:production"
+						}
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"apps/knoxpass-app-e2e/tsconfig.e2e.json"
+						],
+						"exclude": [
+							"**/node_modules/**",
+							"!apps/knoxpass-app-e2e/**/*"
+						]
+					}
+				}
+			}
+		},
+		"knoxpass-extension": {
+			"projectType": "application",
+			"schematics": {
+				"@schematics/angular:component": {
+					"style": "scss"
+				}
+			},
+			"root": "apps/knoxpass-extension",
+			"sourceRoot": "apps/knoxpass-extension/src",
+			"prefix": "knoxpass",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"options": {
+						"outputPath": "dist/apps/knoxpass-extension",
+						"index": "apps/knoxpass-extension/src/index.html",
+						"main": "apps/knoxpass-extension/src/main.ts",
+						"polyfills": "apps/knoxpass-extension/src/polyfills.ts",
+						"tsConfig": "apps/knoxpass-extension/tsconfig.app.json",
+						"aot": true,
+						"assets": [
+							"apps/knoxpass-extension/src/favicon.ico",
+							"apps/knoxpass-extension/src/assets"
+						],
+						"styles": [
+							"apps/knoxpass-extension/src/styles.scss"
+						],
+						"scripts": []
+					},
+					"configurations": {
+						"production": {
+							"fileReplacements": [
+								{
+									"replace": "apps/knoxpass-extension/src/environments/environment.ts",
+									"with": "apps/knoxpass-extension/src/environments/environment.prod.ts"
+								}
+							],
+							"optimization": true,
+							"outputHashing": "all",
+							"sourceMap": false,
+							"extractCss": true,
+							"namedChunks": false,
+							"extractLicenses": true,
+							"vendorChunk": false,
+							"buildOptimizer": true,
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "2mb",
+									"maximumError": "5mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "6kb",
+									"maximumError": "10kb"
+								}
+							]
+						}
+					}
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"options": {
+						"browserTarget": "knoxpass-extension:build"
+					},
+					"configurations": {
+						"production": {
+							"browserTarget": "knoxpass-extension:build:production"
+						}
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n",
+					"options": {
+						"browserTarget": "knoxpass-extension:build"
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"apps/knoxpass-extension/tsconfig.app.json",
+							"apps/knoxpass-extension/tsconfig.spec.json"
+						],
+						"exclude": [
+							"**/node_modules/**",
+							"!apps/knoxpass-extension/**/*"
+						]
+					}
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"options": {
+						"jestConfig": "apps/knoxpass-extension/jest.config.js",
+						"passWithNoTests": true
+					}
+				}
+			}
+		},
+		"knoxpass-extension-e2e": {
+			"root": "apps/knoxpass-extension-e2e",
+			"sourceRoot": "apps/knoxpass-extension-e2e/src",
+			"projectType": "application",
+			"architect": {
+				"e2e": {
+					"builder": "@nrwl/cypress:cypress",
+					"options": {
+						"cypressConfig": "apps/knoxpass-extension-e2e/cypress.json",
+						"tsConfig": "apps/knoxpass-extension-e2e/tsconfig.e2e.json",
+						"devServerTarget": "knoxpass-extension:serve"
+					},
+					"configurations": {
+						"production": {
+							"devServerTarget": "knoxpass-extension:serve:production"
+						}
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"apps/knoxpass-extension-e2e/tsconfig.e2e.json"
+						],
+						"exclude": [
+							"**/node_modules/**",
+							"!apps/knoxpass-extension-e2e/**/*"
+						]
+					}
+				}
+			}
+		},
+		"knoxpass-landing": {
+			"projectType": "application",
+			"schematics": {
+				"@schematics/angular:component": {
+					"style": "scss"
+				}
+			},
+			"root": "apps/knoxpass-landing",
+			"sourceRoot": "apps/knoxpass-landing/src",
+			"prefix": "knoxpass",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"options": {
+						"outputPath": "dist/apps/knoxpass-landing",
+						"index": "apps/knoxpass-landing/src/index.html",
+						"main": "apps/knoxpass-landing/src/main.ts",
+						"polyfills": "apps/knoxpass-landing/src/polyfills.ts",
+						"tsConfig": "apps/knoxpass-landing/tsconfig.app.json",
+						"aot": true,
+						"assets": [
+							"apps/knoxpass-landing/src/favicon.ico",
+							"apps/knoxpass-landing/src/assets"
+						],
+						"styles": [
+							"apps/knoxpass-landing/src/styles.scss"
+						],
+						"scripts": []
+					},
+					"configurations": {
+						"production": {
+							"fileReplacements": [
+								{
+									"replace": "apps/knoxpass-landing/src/environments/environment.ts",
+									"with": "apps/knoxpass-landing/src/environments/environment.prod.ts"
+								}
+							],
+							"optimization": true,
+							"outputHashing": "all",
+							"sourceMap": false,
+							"extractCss": true,
+							"namedChunks": false,
+							"extractLicenses": true,
+							"vendorChunk": false,
+							"buildOptimizer": true,
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "2mb",
+									"maximumError": "5mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "6kb",
+									"maximumError": "10kb"
+								}
+							]
+						}
+					}
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"options": {
+						"browserTarget": "knoxpass-landing:build"
+					},
+					"configurations": {
+						"production": {
+							"browserTarget": "knoxpass-landing:build:production"
+						}
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n",
+					"options": {
+						"browserTarget": "knoxpass-landing:build"
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"apps/knoxpass-landing/tsconfig.app.json",
+							"apps/knoxpass-landing/tsconfig.spec.json"
+						],
+						"exclude": [
+							"**/node_modules/**",
+							"!apps/knoxpass-landing/**/*"
+						]
+					}
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"options": {
+						"jestConfig": "apps/knoxpass-landing/jest.config.js",
+						"passWithNoTests": true
+					}
+				}
+			}
+		},
+		"knoxpass-landing-e2e": {
+			"root": "apps/knoxpass-landing-e2e",
+			"sourceRoot": "apps/knoxpass-landing-e2e/src",
+			"projectType": "application",
+			"architect": {
+				"e2e": {
+					"builder": "@nrwl/cypress:cypress",
+					"options": {
+						"cypressConfig": "apps/knoxpass-landing-e2e/cypress.json",
+						"tsConfig": "apps/knoxpass-landing-e2e/tsconfig.e2e.json",
+						"devServerTarget": "knoxpass-landing:serve"
+					},
+					"configurations": {
+						"production": {
+							"devServerTarget": "knoxpass-landing:serve:production"
+						}
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"apps/knoxpass-landing-e2e/tsconfig.e2e.json"
+						],
+						"exclude": [
+							"**/node_modules/**",
+							"!apps/knoxpass-landing-e2e/**/*"
+						]
+					}
+				}
+			}
+		}
+	},
+	"cli": {
+		"defaultCollection": "@nrwl/angular"
+	},
+	"schematics": {
+		"@nrwl/workspace": {
+			"library": {
+				"linter": "tslint"
+			}
+		},
+		"@nrwl/cypress": {
+			"cypress-project": {
+				"linter": "tslint"
+			}
+		},
+		"@nrwl/node": {
+			"application": {
+				"linter": "tslint"
+			},
+			"library": {
+				"linter": "tslint"
+			}
+		},
+		"@nrwl/nest": {
+			"application": {
+				"linter": "tslint"
+			},
+			"library": {
+				"linter": "tslint"
+			}
+		},
+		"@nrwl/express": {
+			"application": {
+				"linter": "tslint"
+			},
+			"library": {
+				"linter": "tslint"
+			}
+		},
+		"@nrwl/angular:application": {
+			"unitTestRunner": "jest",
+			"e2eTestRunner": "cypress"
+		},
+		"@nrwl/angular:library": {
+			"unitTestRunner": "jest"
+		}
+	},
+	"defaultProject": "knoxpass"
 }

@@ -27,15 +27,6 @@
 		}
 	},
 	"projects": {
-		"knoxpass": {
-			"tags": []
-		},
-		"knoxpass-e2e": {
-			"tags": [],
-			"implicitDependencies": [
-				"knoxpass"
-			]
-		},
 		"api": {
 			"tags": []
 		},
