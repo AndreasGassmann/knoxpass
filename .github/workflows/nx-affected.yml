@@ -51,7 +51,13 @@ jobs:
         with:
           name: cypress-videos
           path: dist/cypress
-
+        
+      # - name: Upload built app
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: app_dist
+      #     path: www
+  
   deploy_github_pages:
     needs: build
     if: github.ref == 'refs/heads/main'
@@ -80,3 +86,86 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run actions:deploy
+
+  # android_build:
+  #   needs: build_angular
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     # Setup environment
+  #     - uses: actions/checkout@v2
+
+  #     - name: Setup java
+  #       uses: actions/setup-java@v1
+  #       with:
+  #         java-version: 1.8
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12.x
+
+  #     # Build app
+  #     - name: Download built webapp
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: angular_dist
+  #         path: www
+
+  #     # Install dependencies
+  #     - name: Install Capacitor
+  #       run: npm install @capacitor/cli
+
+  #     - name: Copy files to native project
+  #       run: npx cap sync android
+
+  #     - name: Clean android project
+  #       run: android/gradlew --project-dir android clean
+
+  #     - name: Build Android APK
+  #       run: |
+  #         android/gradlew assembleDebug --project-dir android build
+  #         mv android/app/build/outputs/apk/debug/app-debug.apk invite-manager-app-dev.apk
+  #     # Publish dev artifacts
+  #     - name: Upload dev APK
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: app-dev
+  #         path: invite-manager-app-dev.apk
+
+  # ios_build:
+  #   needs: build_angular
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: [macos-latest]
+  #   env:
+  #     XC_VERSION: ${{ '11.4' }}
+  #     XC_WORKSPACE: ${{ 'ios/App/App.xcworkspace' }}
+  #     XC_SCHEME: ${{ 'App' }}
+
+  #   steps:
+  #     # Setup environment
+  #     - uses: actions/checkout@v2
+
+  #     - name: Select latest Xcode
+  #       run: 'sudo xcode-select -s /Applications/Xcode_$XC_VERSION.app'
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12.x
+
+  #     - name: Download built webapp
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: angular_dist
+  #         path: www
+
+  #     # Install dependencies
+  #     - name: Install Capacitor
+  #       run: npm install @capacitor/cli
+
+  #     - name: Copy files to native project
+  #       run: npx cap sync ios
+  #     # - name: Build
+  #     #   run: /usr/bin/xcodebuild -workspace "$XC_WORKSPACE" -scheme "$XC_SCHEME" generic/platform=iOS -configuration Release archive -archivePath ios/InviteManager.xcarchive -allowProvisioningUpdates

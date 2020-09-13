@@ -449,7 +449,11 @@
         },
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
-          "options": {}
+          "options": {
+            "baseHref": "/knoxpass/",
+            "noSilent": true,
+            "message": "GitHub Actions Deploy"
+          }
         }
       }
     },
