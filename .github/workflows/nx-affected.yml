@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: git fetch --no-tags --prune --depth=5 origin main
       - run: npm ci
-      - run: npm run nx run-many --target=build --all
-      - run: npm run nx run-many --target=lint --all
-      - run: npm run nx run-many --target=test --all
-      - run: npm run nx run-many --target=e2e --all
+      - run: npm run nx run-many -- --target=build --all
+      - run: npm run nx run-many -- --target=lint --all
+      - run: npm run nx run-many -- --target=test --all
+      - run: npm run nx run-many -- --target=e2e --all
