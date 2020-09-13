@@ -4,6 +4,6 @@ import { Message } from '@knoxpass/api-interfaces';
 @Injectable()
 export class AppService {
 	getData(): Message {
-		return { message: 'Welcome to our api 1!' };
+		return { message: 'Welcome to our api!' };
 	}
 }
