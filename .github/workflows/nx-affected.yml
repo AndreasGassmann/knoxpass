@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: git fetch --no-tags --prune --depth=5 origin main
       - run: npm ci
-      - run: npm run affected:build -- --base=origin/main
-      - run: npm run affected:lint -- --base=origin/main
-      - run: npm run affected:test -- --base=origin/main
-      - run: npm run affected:e2e -- --base=origin/main
+      - run: npm run build
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run e2e
