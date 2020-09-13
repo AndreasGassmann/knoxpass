@@ -1,0 +1,73 @@
+{
+	"npmScope": "knoxpass",
+	"affected": {
+		"defaultBase": "main"
+	},
+	"implicitDependencies": {
+		"angular.json": "*",
+		"package.json": {
+			"dependencies": "*",
+			"devDependencies": "*"
+		},
+		"tsconfig.base.json": "*",
+		"tslint.json": "*",
+		"nx.json": "*"
+	},
+	"tasksRunnerOptions": {
+		"default": {
+			"runner": "@nrwl/workspace/tasks-runners/default",
+			"options": {
+				"cacheableOperations": [
+					"build",
+					"lint",
+					"test",
+					"e2e"
+				]
+			}
+		}
+	},
+	"projects": {
+		"knoxpass": {
+			"tags": []
+		},
+		"knoxpass-e2e": {
+			"tags": [],
+			"implicitDependencies": [
+				"knoxpass"
+			]
+		},
+		"api": {
+			"tags": []
+		},
+		"api-interfaces": {
+			"tags": []
+		},
+		"knoxpass-app": {
+			"tags": []
+		},
+		"knoxpass-app-e2e": {
+			"tags": [],
+			"implicitDependencies": [
+				"knoxpass-app"
+			]
+		},
+		"knoxpass-extension": {
+			"tags": []
+		},
+		"knoxpass-extension-e2e": {
+			"tags": [],
+			"implicitDependencies": [
+				"knoxpass-extension"
+			]
+		},
+		"knoxpass-landing": {
+			"tags": []
+		},
+		"knoxpass-landing-e2e": {
+			"tags": [],
+			"implicitDependencies": [
+				"knoxpass-landing"
+			]
+		}
+	}
+}
