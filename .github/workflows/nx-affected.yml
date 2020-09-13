@@ -22,9 +22,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: git fetch --no-tags --prune --depth=5 origin master
-      - run: yarn install --frozen-lockfile
-      - run: yarn affected:build --base=origin/master
-      - run: yarn affected:lint --base=origin/master
-      - run: yarn affected:test --base=origin/master
-      - run: yarn affected:e2e --base=origin/master
+      - run: git fetch --no-tags --prune --depth=5 origin main
+      - run: npm ci
+      - run: npm run affected:build -- --base=origin/main
+      - run: npm run affected:lint -- --base=origin/main
+      - run: npm run affected:test -- --base=origin/main
+      - run: npm run affected:e2e -- --base=origin/main
