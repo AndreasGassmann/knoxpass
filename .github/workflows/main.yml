@@ -51,12 +51,12 @@ jobs:
         with:
           name: cypress-videos
           path: dist/cypress
-        
-      # - name: Upload built app
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: app_dist
-      #     path: www
+    
+      - name: Upload built app
+        uses: actions/upload-artifact@v1
+        with:
+          name: knoxpass-extension
+          path: dist/apps/knoxpass-extension
   
   deploy_github_pages:
     needs: build
