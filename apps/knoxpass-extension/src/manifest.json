@@ -1,0 +1,39 @@
+{
+  "name": "Knoxpass Extension",
+  "version": "0.0.1",
+  "description": "Knoxpass - A secure mobile first password manager",
+  "icons": {
+    "16": "assets/icon/knoxpass_logo-16px.ico",
+    "48": "assets/icon/knoxpass_logo-48px.ico",
+    "128": "assets/icon/knoxpass_logo-128px.ico"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "background": {
+    "scripts": ["background.js", "runtime.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "activeTab",
+    "notifications",
+    "http://*/",
+    "https://*/"
+  ],
+  "content_scripts": [
+    {
+      "run_at": "document_start",
+      "all_frames": true,
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["content_script.js", "runtime.js"]
+    }
+  ],
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "19": "assets/icon/knoxpass_logo-19px.ico",
+      "38": "assets/icon/knoxpass_logo-38px.ico"
+    }
+  },
+  "manifest_version": 2
+}

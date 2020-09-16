@@ -14,9 +14,7 @@
             "outputPath": "dist/apps/api",
             "main": "apps/api/src/main.ts",
             "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": [
-              "apps/api/src/assets"
-            ]
+            "assets": ["apps/api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -45,10 +43,7 @@
               "apps/api/tsconfig.app.json",
               "apps/api/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/api/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/api/**/*"]
           }
         },
         "test": {
@@ -73,10 +68,7 @@
               "libs/api-interfaces/tsconfig.lib.json",
               "libs/api-interfaces/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/api-interfaces/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/api-interfaces/**/*"]
           }
         },
         "test": {
@@ -112,9 +104,7 @@
               "apps/knoxpass-app/src/favicon.ico",
               "apps/knoxpass-app/src/assets"
             ],
-            "styles": [
-              "apps/knoxpass-app/src/styles.scss"
-            ],
+            "styles": ["apps/knoxpass-app/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -172,10 +162,7 @@
               "apps/knoxpass-app/tsconfig.app.json",
               "apps/knoxpass-app/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/knoxpass-app/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/knoxpass-app/**/*"]
           }
         },
         "test": {
@@ -208,13 +195,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/knoxpass-app-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/knoxpass-app-e2e/**/*"
-            ]
+            "tsConfig": ["apps/knoxpass-app-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/knoxpass-app-e2e/**/*"]
           }
         }
       }
@@ -231,8 +213,11 @@
       "prefix": "knoxpass",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "apps/knoxpass-extension/custom-webpack.config.js"
+            },
             "outputPath": "dist/apps/knoxpass-extension",
             "index": "apps/knoxpass-extension/src/index.html",
             "main": "apps/knoxpass-extension/src/main.ts",
@@ -241,11 +226,10 @@
             "aot": true,
             "assets": [
               "apps/knoxpass-extension/src/favicon.ico",
-              "apps/knoxpass-extension/src/assets"
+              "apps/knoxpass-extension/src/assets",
+              "apps/knoxpass-extension/src/manifest.json"
             ],
-            "styles": [
-              "apps/knoxpass-extension/src/styles.scss"
-            ],
+            "styles": ["apps/knoxpass-extension/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -303,10 +287,7 @@
               "apps/knoxpass-extension/tsconfig.app.json",
               "apps/knoxpass-extension/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/knoxpass-extension/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/knoxpass-extension/**/*"]
           }
         },
         "test": {
@@ -339,9 +320,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/knoxpass-extension-e2e/tsconfig.e2e.json"
-            ],
+            "tsConfig": ["apps/knoxpass-extension-e2e/tsconfig.e2e.json"],
             "exclude": [
               "**/node_modules/**",
               "!apps/knoxpass-extension-e2e/**/*"
@@ -374,9 +353,7 @@
               "apps/knoxpass-landing/src/favicon.ico",
               "apps/knoxpass-landing/src/assets"
             ],
-            "styles": [
-              "apps/knoxpass-landing/src/styles.scss"
-            ],
+            "styles": ["apps/knoxpass-landing/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -434,10 +411,7 @@
               "apps/knoxpass-landing/tsconfig.app.json",
               "apps/knoxpass-landing/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/knoxpass-landing/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/knoxpass-landing/**/*"]
           }
         },
         "test": {
@@ -478,13 +452,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/knoxpass-landing-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/knoxpass-landing-e2e/**/*"
-            ]
+            "tsConfig": ["apps/knoxpass-landing-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/knoxpass-landing-e2e/**/*"]
           }
         }
       }
