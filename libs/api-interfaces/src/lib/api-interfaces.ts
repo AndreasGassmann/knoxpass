@@ -2,6 +2,18 @@ export interface Message {
   message: string;
 }
 
+export interface PairRequest {
+  version: string
+  publicKey: string
+  relayService: string
+}
+
+export interface PairResponse {
+  version: string
+  publicKey: string
+  relayService: string
+}
+
 export const generateUuid = function () {
   const buf: Uint32Array = new Uint32Array(4);
   window.crypto.getRandomValues(buf);
