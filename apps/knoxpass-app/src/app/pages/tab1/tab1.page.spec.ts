@@ -1,6 +1,7 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
+import { ExploreContainerComponentModule } from '../../components/explore-container/explore-container.module';
+import { PushService } from '../../services/push/push.service';
 
 import { Tab1Page } from './tab1.page';
 
@@ -13,6 +14,9 @@ describe('Tab1Page', () => {
       TestBed.configureTestingModule({
         declarations: [Tab1Page],
         imports: [IonicModule.forRoot(), ExploreContainerComponentModule],
+        providers: [
+          { provide: PushService, useValue: { register: () => undefined } },
+        ],
       }).compileComponents();
 
       fixture = TestBed.createComponent(Tab1Page);
