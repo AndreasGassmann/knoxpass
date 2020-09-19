@@ -102,9 +102,26 @@
             "aot": true,
             "assets": [
               "apps/knoxpass-app/src/favicon.ico",
-              "apps/knoxpass-app/src/assets"
+              "apps/knoxpass-app/src/assets",
+              {
+                "glob": "**/*",
+                "input": "apps/knoxpass-app/src/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "apps/knoxpass-app/node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              }
             ],
-            "styles": ["apps/knoxpass-app/src/styles.scss"],
+            "styles": [
+              {
+                "input": "apps/knoxpass-app/src/theme/variables.scss"
+              },
+              {
+                "input": "apps/knoxpass-app/src/global.scss"
+              }
+            ],
             "scripts": []
           },
           "configurations": {
