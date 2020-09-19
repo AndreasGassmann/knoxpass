@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">KnoxPass</string>
+    <string name="title_activity_main">KnoxPass</string>
+    <string name="package_name">com.knoxpass.app</string>
+    <string name="custom_url_scheme">com.knoxpass.app</string>
+</resources>

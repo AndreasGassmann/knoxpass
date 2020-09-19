@@ -52,6 +52,7 @@
     "@angular/cli": "~10.0.0",
     "@angular/compiler-cli": "^10.0.0",
     "@angular/language-service": "^10.0.0",
+    "@capacitor/cli": "2.4.1",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
     "@nrwl/cypress": "10.2.0",
