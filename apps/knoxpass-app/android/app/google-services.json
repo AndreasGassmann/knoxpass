@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "337779784606",
+    "firebase_url": "https://knoxpass-4e85c.firebaseio.com",
+    "project_id": "knoxpass-4e85c",
+    "storage_bucket": "knoxpass-4e85c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337779784606:android:da676de2b286c066a6748f",
+        "android_client_info": {
+          "package_name": "com.knoxpass.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337779784606-clcu4apebg9i7sjfmot36gibqkt4a3m2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI9PFDbn8Nc9DLc-7POaa8cRP93Vqh-r4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337779784606-clcu4apebg9i7sjfmot36gibqkt4a3m2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337779784606-deint15m47mbcpchqihb9bpvvdpdrple.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.knoxpass.app",
+                "app_store_id": "1532618185"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
