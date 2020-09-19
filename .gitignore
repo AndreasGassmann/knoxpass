@@ -40,3 +40,4 @@ Thumbs.db
 
 # Capacitor
 apps/knoxpass-app/node_modules
+apps/knoxpass-app/www
