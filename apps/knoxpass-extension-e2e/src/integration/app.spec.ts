@@ -8,6 +8,6 @@ describe('knoxpass-extension', () => {
     cy.login('my-email@something.com', 'myPassword');
 
     // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains('Welcome to');
+    getGreeting().contains('Tab 1');
   });
 });
