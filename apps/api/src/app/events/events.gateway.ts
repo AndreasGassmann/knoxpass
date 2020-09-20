@@ -53,7 +53,14 @@ export class EventsGateway {
   ): Promise<boolean> {
     console.log('data', data);
 
-    const pkh = await verifyChallengeSignature(data);
+    let pkh: string | undefined;
+    try {
+      pkh = await verifyChallengeSignature(data);
+    } catch (e) {
+      console.log(e);
+      client.close(undefined, 'Invalid authentication provided.');
+      return false;
+    }
 
     console.log('pkh', pkh);
 
