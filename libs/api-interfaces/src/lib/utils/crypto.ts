@@ -5,9 +5,17 @@ import * as sodium from 'libsodium-wrappers';
  *
  * @param value
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function toHex(value: any): string {
+export function toHex(value: string | Buffer | Uint8Array): string {
   return Buffer.from(value).toString('hex');
+}
+
+/**
+ * Convert a value from hex
+ *
+ * @param value
+ */
+export function fromHex(value: string): Buffer | Uint8Array {
+  return Buffer.from(value, 'hex');
 }
 
 /**
@@ -119,15 +127,13 @@ export async function decryptCryptoboxPayload(
  * @param publicKey
  */
 export async function sealCryptobox(
-  payload: string | Buffer,
-  publicKey: Uint8Array
+  payload: string,
+  publicKey: string
 ): Promise<string> {
   await sodium.ready;
 
-  const encryptedMessage = sodium.crypto_box_seal(
-    payload,
-    Buffer.from(publicKey)
-  );
+  const decodedPublicKey = new Uint8Array(Buffer.from(publicKey, 'hex'));
+  const encryptedMessage = sodium.crypto_box_seal(payload, decodedPublicKey);
 
   return toHex(encryptedMessage);
 }
@@ -148,9 +154,66 @@ export async function openCryptobox(
 
   const decryptedMessage = sodium.crypto_box_seal_open(
     encryptedPayload,
-    Buffer.from(publicKey),
-    Buffer.from(privateKey)
+    publicKey,
+    privateKey
   );
 
   return Buffer.from(decryptedMessage).toString();
+}
+
+/**
+ * Decrypt a message with public + private key
+ *
+ * @param encryptedPayload
+ * @param publicKey
+ * @param privateKey
+ */
+export async function sign(
+  message: string,
+  privateKey: Buffer
+): Promise<string> {
+  await sodium.ready;
+
+  // password: `ed:${toHex(rawSignature)}:${await this.getPublicKey()}`,
+
+  const hash: Uint8Array = sodium.crypto_generichash(
+    32,
+    sodium.from_string(message)
+  );
+  const rawSignature: Uint8Array = sodium.crypto_sign_detached(
+    hash,
+    privateKey
+  );
+
+  return toHex(rawSignature);
+}
+
+/**
+ * Decrypt a message with public + private key
+ *
+ * @param encryptedPayload
+ * @param publicKey
+ * @param privateKey
+ */
+export async function verify(
+  message: string,
+  signature: string,
+  publicKey: string
+): Promise<boolean> {
+  await sodium.ready;
+
+  const rawSignature: Buffer | Uint8Array = new Uint8Array(fromHex(signature));
+
+  const hash: Uint8Array = sodium.crypto_generichash(
+    32,
+    sodium.from_string(message)
+  );
+
+  const isValidSignature: boolean = sodium.crypto_sign_verify_detached(
+    rawSignature,
+    hash,
+    new Uint8Array(Buffer.from(publicKey, 'hex'))
+  );
+
+  return isValidSignature;
 }
