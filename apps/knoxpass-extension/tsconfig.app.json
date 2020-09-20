@@ -9,5 +9,9 @@
     "src/extension/background.ts",
     "src/extension/content_script.ts",
     "src/polyfills.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }

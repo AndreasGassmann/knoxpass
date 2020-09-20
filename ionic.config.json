@@ -7,6 +7,14 @@
       },
       "type": "angular",
       "root": "apps/knoxpass-app"
+    },
+    "knoxpass-extension": {
+      "name": "knoxpass-extension",
+      "integrations": {
+        "capacitor": {}
+      },
+      "type": "angular",
+      "root": "apps/knoxpass-extension"
     }
   },
   "defaultProject": "knoxpass-app"
