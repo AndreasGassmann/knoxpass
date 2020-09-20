@@ -22,18 +22,25 @@ const isConnected = (
   providedIn: 'root',
 })
 export class WebsocketService {
-  private uuid: string | undefined;
   private keypair: KeyPair | undefined;
 
   private socket$: WebSocketSubject<{ event: string; data: any }> | undefined;
 
   constructor() {
-    generateGUID().then((uuid) => {
-      this.uuid = uuid;
+    const uuid = localStorage.getItem('uuid');
+
+    if (uuid) {
       getSigningKeypairFromSeed(uuid).then((keypair) => {
         this.keypair = keypair;
       });
-    });
+    } else {
+      generateGUID().then((newUuid) => {
+        localStorage.setItem('uuid', newUuid);
+        getSigningKeypairFromSeed(newUuid).then((keypair) => {
+          this.keypair = keypair;
+        });
+      });
+    }
   }
 
   public connect(): void {
@@ -55,6 +62,7 @@ export class WebsocketService {
         if (res.event === 'challenge') {
           generateChallengeSignature(res.data, this.keypair).then(
             (signature) => {
+              console.log('sig', signature);
               this.sendMessage({ event: 'auth', data: signature });
             }
           );
