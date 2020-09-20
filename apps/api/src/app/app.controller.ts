@@ -1,9 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 
-import { Message } from '@knoxpass/api-interfaces';
-
 import { AppService } from './app.service';
 
+interface Message {
+  message: string;
+}
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}

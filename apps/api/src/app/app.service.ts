@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from '@knoxpass/api-interfaces';
+interface Message {
+  message: string;
+}
 
 @Injectable()
 export class AppService {
-	getData(): Message {
-		return { message: 'Welcome to our api!' };
-	}
+  getData(): Message {
+    return { message: 'Welcome to our api!' };
+  }
 }
