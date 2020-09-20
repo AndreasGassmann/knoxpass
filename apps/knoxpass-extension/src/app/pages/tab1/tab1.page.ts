@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PushService } from '../../services/push/push.service';
 
 @Component({
   selector: 'knoxpass-tab1',
@@ -7,9 +6,7 @@ import { PushService } from '../../services/push/push.service';
   styleUrls: ['tab1.page.scss'],
 })
 export class Tab1Page implements OnInit {
-  constructor(private readonly pushService: PushService) {}
+  constructor() {}
 
-  public ngOnInit() {
-    this.pushService.register();
-  }
+  public ngOnInit() {}
 }
