@@ -305,17 +305,14 @@ export async function generateChallengeSignature(
   throw new Error('No valid nonce found within specified timeframe.');
 }
 
-export async function verifyChallengeSignature(
-  pkh: string,
-  challengeSignature: string
-) {
-  const [
-    prefix,
-    nonce,
-    challenge,
-    signature,
-    publicKey,
-  ] = challengeSignature.split(':');
+export async function verifyChallengeSignature(challengeSignature: string) {
+  const splits = challengeSignature.split(':');
+
+  if (splits.length !== 5) {
+    throw new Error('ChallengeSignature length is invalid!');
+  }
+
+  const [prefix, nonce, challenge, signature, publicKey] = splits;
 
   if (prefix !== 'ed') {
     throw new Error('Prefix invalid!');
@@ -337,5 +334,11 @@ export async function verifyChallengeSignature(
     throw new Error('Nonce cannot be negative');
   }
 
-  return verify(nonce + challenge, signature, publicKey);
+  const isValid = await verify(nonce + challenge, signature, publicKey);
+
+  if (!isValid) {
+    throw new Error('Invalid chalenge signature!');
+  }
+
+  return toHex(await getHashForSeed(fromHex(publicKey).toString()));
 }

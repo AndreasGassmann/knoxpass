@@ -13,7 +13,7 @@ export class Tab1Page implements OnInit {
     private readonly websocketService: WebsocketService
   ) {}
 
-  public ngOnInit() {
+  public async ngOnInit() {
     this.pushService.register();
     this.websocketService.connect();
     this.websocketService.sendMessage({
