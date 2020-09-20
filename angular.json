@@ -110,7 +110,7 @@
               },
               {
                 "glob": "**/*.svg",
-                "input": "apps/knoxpass-app/node_modules/ionicons/dist/ionicons/svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
               }
             ],
@@ -244,9 +244,26 @@
             "assets": [
               "apps/knoxpass-extension/src/favicon.ico",
               "apps/knoxpass-extension/src/assets",
-              "apps/knoxpass-extension/src/manifest.json"
+              "apps/knoxpass-extension/src/manifest.json",
+              {
+                "glob": "**/*",
+                "input": "apps/knoxpass-extension/src/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              }
             ],
-            "styles": ["apps/knoxpass-extension/src/styles.scss"],
+            "styles": [
+              {
+                "input": "apps/knoxpass-extension/src/theme/variables.scss"
+              },
+              {
+                "input": "apps/knoxpass-extension/src/global.scss"
+              }
+            ],
             "scripts": []
           },
           "configurations": {
