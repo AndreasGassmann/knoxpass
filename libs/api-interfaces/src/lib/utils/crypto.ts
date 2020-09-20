@@ -1,3 +1,4 @@
+import { ApiChallenge } from '@knoxpass/api-interfaces';
 import * as sodium from 'libsodium-wrappers';
 
 /**
@@ -83,16 +84,16 @@ export async function encryptCryptoboxPayload(
 ): Promise<string> {
   await sodium.ready;
 
-  const nonce = Buffer.from(
-    sodium.randombytes_buf(sodium.crypto_secretbox_NONCEBYTES)
+  const nonce = new Uint8Array(
+    Buffer.from(sodium.randombytes_buf(sodium.crypto_secretbox_NONCEBYTES))
   );
   const combinedPayload = Buffer.concat([
     nonce,
     Buffer.from(
       sodium.crypto_secretbox_easy(
-        Buffer.from(message, 'utf8'),
+        new Uint8Array(Buffer.from(message, 'utf8')),
         nonce,
-        sharedKey
+        new Uint8Array(sharedKey)
       )
     ),
   ]);
@@ -118,6 +119,53 @@ export async function decryptCryptoboxPayload(
   return Buffer.from(
     sodium.crypto_secretbox_open_easy(ciphertext, nonce, sharedKey)
   ).toString('utf8');
+}
+
+/**
+ * Create a cryptobox shared key
+ *
+ * @param otherPublicKey
+ * @param selfPrivateKey
+ */
+async function createCryptoBox(
+  otherPublicKey: string,
+  selfPrivateKey: Uint8Array
+): Promise<[Uint8Array, Uint8Array, Uint8Array]> {
+  return [
+    selfPrivateKey,
+    selfPrivateKey,
+    new Uint8Array(Buffer.from(otherPublicKey, 'hex')),
+  ];
+}
+
+/**
+ * Create a cryptobox client
+ *
+ * @param otherPublicKey
+ * @param selfPrivateKey
+ */
+export async function createCryptoBoxClient(
+  otherPublicKey: string,
+  selfPrivateKey: Uint8Array
+): Promise<sodium.CryptoKX> {
+  const keys = await createCryptoBox(otherPublicKey, selfPrivateKey);
+
+  return sodium.crypto_kx_client_session_keys(...keys);
+}
+
+/**
+ * Create a cryptobox server
+ *
+ * @param otherPublicKey
+ * @param selfPrivateKey
+ */
+export async function createCryptoBoxServer(
+  otherPublicKey: string,
+  selfPrivateKey: Uint8Array
+): Promise<sodium.CryptoKX> {
+  const keys = await createCryptoBox(otherPublicKey, selfPrivateKey);
+
+  return sodium.crypto_kx_server_session_keys(...keys);
 }
 
 /**
@@ -216,4 +264,78 @@ export async function verify(
   );
 
   return isValidSignature;
+}
+
+export async function generateChallengeSignature(
+  challenge: ApiChallenge,
+  keypair: sodium.KeyPair
+) {
+  const MAX_TIMEOUT = 10 * 1000;
+  let isRunning = true;
+
+  const timeout = setTimeout(() => {
+    isRunning = false;
+  }, MAX_TIMEOUT);
+
+  let nonce = 0;
+  while (isRunning) {
+    const signature = await sign(
+      nonce + challenge.challenge,
+      keypair.privateKey as any
+    );
+
+    const prefix = signature.slice(0, 1).repeat(challenge.difficulty);
+    const postfix = signature.slice(-1).repeat(challenge.difficulty);
+
+    if (signature.startsWith(prefix) || signature.endsWith(postfix)) {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      return [
+        'ed',
+        nonce,
+        challenge.challenge,
+        signature,
+        toHex(keypair.publicKey),
+      ].join(':');
+    }
+    nonce++;
+  }
+
+  throw new Error('No valid nonce found within specified timeframe.');
+}
+
+export async function verifyChallengeSignature(
+  pkh: string,
+  challengeSignature: string
+) {
+  const [
+    prefix,
+    nonce,
+    challenge,
+    signature,
+    publicKey,
+  ] = challengeSignature.split(':');
+
+  if (prefix !== 'ed') {
+    throw new Error('Prefix invalid!');
+  }
+
+  if (nonce.indexOf('.') !== -1) {
+    // TODO: Not sure if these checks are necessary
+    throw new Error('Nonce is a float!');
+  }
+
+  const parsedNonce = parseInt(nonce, 10);
+  if (isNaN(parsedNonce)) {
+    // TODO: Not sure if these checks are necessary
+    throw new Error('Nonce cannot be parsed!');
+  }
+
+  if (parsedNonce < 0) {
+    // TODO: Not sure if these checks are necessary
+    throw new Error('Nonce cannot be negative');
+  }
+
+  return verify(nonce + challenge, signature, publicKey);
 }

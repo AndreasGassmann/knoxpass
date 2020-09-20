@@ -1,5 +1,6 @@
 export interface PairResponse {
   version: string;
-  publicKey: string;
-  relayService: string;
+  signPublicKey: string;
+  boxPublicKey: string;
+  relayServer: string;
 }

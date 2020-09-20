@@ -1,3 +1,4 @@
+import { ApiChallenge } from '../services/api.service';
 import {
   toHex,
   fromHex,
@@ -7,8 +8,12 @@ import {
   verify,
   sealCryptobox,
   openCryptobox,
+  createCryptoBoxClient,
+  createCryptoBoxServer,
   encryptCryptoboxPayload,
   decryptCryptoboxPayload,
+  generateChallengeSignature,
+  verifyChallengeSignature,
 } from './crypto';
 
 interface Case {
@@ -16,18 +21,22 @@ interface Case {
   output: any;
 }
 
+interface EdKeyPair {
+  keyType: 'ed25519';
+  privateKey: Uint8Array;
+  publicKey: Uint8Array;
+}
+
+interface BoxKeyPair {
+  keyType: 'x25519';
+  privateKey: Uint8Array;
+  publicKey: Uint8Array;
+}
+
 interface KeyPairInfo {
   seed: string;
-  signKeypair: {
-    keyType: 'ed25519';
-    privateKey: Uint8Array;
-    publicKey: Uint8Array;
-  };
-  boxKeypair: {
-    keyType: 'x25519';
-    privateKey: Uint8Array;
-    publicKey: Uint8Array;
-  };
+  signKeypair: EdKeyPair;
+  boxKeypair: BoxKeyPair;
 }
 
 const keypair1: KeyPairInfo = {
@@ -750,6 +759,31 @@ describe('crypto', () => {
 
   //   validCases.map((c) => {
   //     return it(`should encrypt and decrypt with encryptCryptoboxPayload ${c.message}`, async () => {
+  //       const clientKey = await createCryptoBoxClient(
+  //         toHex(c.keypair1.publicKey),
+  //         c.keypair2.privateKey
+  //       );
+  //       const serverKey = await createCryptoBoxServer(
+  //         toHex(c.keypair1.publicKey),
+  //         c.keypair2.privateKey
+  //       );
+
+  //       const enrypted = await encryptCryptoboxPayload(
+  //         c.message,
+  //         clientKey as any
+  //       );
+  //       // We can't check the encrypted payload, because it's always different
+  //       const decrypted = await decryptCryptoboxPayload(
+  //         new Uint8Array(fromHex(enrypted)) as any,
+  //         serverKey as any
+  //       );
+  //       expect(decrypted).toEqual(c.message);
+  //     });
+  //   });
+
+  // invalidCases.map((c) => {
+  //   return it(`should fail to encrypt and decrypt with encryptCryptoboxPayload ${c.message}`, async () => {
+  //     try {
   //       const enrypted = await encryptCryptoboxPayload(
   //         c.message,
   //         toHex(c.keypair.publicKey)
@@ -761,28 +795,144 @@ describe('crypto', () => {
   //         c.keypair.privateKey
   //       );
   //       expect(decrypted).toEqual(c.message);
-  //     });
-  //   });
-
-  //   invalidCases.map((c) => {
-  //     return it(`should fail to encrypt and decrypt with encryptCryptoboxPayload ${c.message}`, async () => {
-  //       try {
-  //         const enrypted = await encryptCryptoboxPayload(
-  //           c.message,
-  //           toHex(c.keypair.publicKey)
-  //         );
-  //         // We can't check the encrypted payload, because it's always different
-  //         const decrypted = await decryptCryptoboxPayload(
-  //           new Uint8Array(fromHex(enrypted)) as any,
-  //           c.keypair.publicKey,
-  //           c.keypair.privateKey
-  //         );
-  //         expect(decrypted).toEqual(c.message);
-  //         expect(true).toBe(false); // We should never get here
-  //       } catch (error) {
-  //         expect(error.toString()).toBe(c.error);
-  //       }
-  //     });
+  //       expect(true).toBe(false); // We should never get here
+  //     } catch (error) {
+  //       expect(error.toString()).toBe(c.error);
+  //     }
   //   });
   // });
+  // });
+
+  describe('generate a signature for a challenge', () => {
+    const getChallenge = (difficulty: number) => ({
+      difficulty: difficulty,
+      challenge: 'a-random-string',
+      expiration: new Date().getTime(),
+    });
+    const validCases: {
+      challenge: ApiChallenge;
+      keypair: EdKeyPair;
+      signature: string;
+    }[] = [
+      {
+        challenge: getChallenge(0),
+        keypair: keypair1.signKeypair,
+        signature:
+          'ed:0:a-random-string:f025a84ecb46a9d8b72688ebde1cb1ef74dc361d8e7cbca6b3f31e573ea4b4895362c78e8e7ee67f7a293eb5d2bfbfc60b814510159e40160dfbb2264c73e003:ce9f2590b7c4994ee523b2fbe22e0bc3136cd9adb45023683245e4a2ece2d6c3',
+      },
+      {
+        challenge: getChallenge(1),
+        keypair: keypair1.signKeypair,
+        signature:
+          'ed:0:a-random-string:f025a84ecb46a9d8b72688ebde1cb1ef74dc361d8e7cbca6b3f31e573ea4b4895362c78e8e7ee67f7a293eb5d2bfbfc60b814510159e40160dfbb2264c73e003:ce9f2590b7c4994ee523b2fbe22e0bc3136cd9adb45023683245e4a2ece2d6c3',
+      },
+      {
+        challenge: getChallenge(2),
+        keypair: keypair1.signKeypair,
+        signature:
+          'ed:8:a-random-string:c74759dc70dfb1e998da7a5330946c2f3d55ed6a5560937729656d2feffb7dd1c65a76238f28c21eac39bbd61e77bc886aee8649ea37603e27fdc92da5c9b900:ce9f2590b7c4994ee523b2fbe22e0bc3136cd9adb45023683245e4a2ece2d6c3',
+      },
+      {
+        challenge: getChallenge(3),
+        keypair: keypair1.signKeypair,
+        signature:
+          'ed:59:a-random-string:666ec43e0489de2ae2842c582978dd23b6de1c2f2800ed0da3bd196c7f428c53ce3a01a7cdb67d9b6957fb2ed26b81adbec521f29d5c36cfbb9a83c0a848df06:ce9f2590b7c4994ee523b2fbe22e0bc3136cd9adb45023683245e4a2ece2d6c3',
+      },
+      {
+        challenge: getChallenge(4),
+        keypair: keypair1.signKeypair,
+        signature:
+          'ed:3446:a-random-string:223cd3031b81f00e66d557ba5085745c5a568fd0cb6d5b97bab59e6efb1f346f5a554dd20308238e74aa829084ce46533bf0a59612cd038fd36ce07c1cdd0000:ce9f2590b7c4994ee523b2fbe22e0bc3136cd9adb45023683245e4a2ece2d6c3',
+      },
+      {
+        challenge: getChallenge(5),
+        keypair: keypair1.signKeypair,
+        signature:
+          'ed:6051:a-random-string:fffff06f11e89aec36a6a4bd249197203975f1bac3afc81e4026def37544db407a3bf1218dce554399ed32030562290469abf4f9c6fccfeefbffc99dbb8b5704:ce9f2590b7c4994ee523b2fbe22e0bc3136cd9adb45023683245e4a2ece2d6c3',
+      },
+      {
+        challenge: getChallenge(0),
+        keypair: keypair2.signKeypair,
+        signature:
+          'ed:0:a-random-string:bc4a500248aa2332be0baa36b226714c4ebb3cd0fadf3656035bffac5b569738d09988dc4b7c59ed47638ac2789dffe65f184fa7f5ef5b9389e28d588edaf10b:41793c75c0ed6f06e444e4d23ec04fa23ca7ba71eeeb5f0d8e32317e80da1aee',
+      },
+      {
+        challenge: getChallenge(1),
+        keypair: keypair2.signKeypair,
+        signature:
+          'ed:0:a-random-string:bc4a500248aa2332be0baa36b226714c4ebb3cd0fadf3656035bffac5b569738d09988dc4b7c59ed47638ac2789dffe65f184fa7f5ef5b9389e28d588edaf10b:41793c75c0ed6f06e444e4d23ec04fa23ca7ba71eeeb5f0d8e32317e80da1aee',
+      },
+      {
+        challenge: getChallenge(2),
+        keypair: keypair2.signKeypair,
+        signature:
+          'ed:2:a-random-string:2d292f6e64b7995c2eb2c63c3153b51ada83402f621ba13fff7b93fd1a2fd9c3de10bacce999ed6a2153135a607ade47d46c4276bc3f3021a32a046dae29c500:41793c75c0ed6f06e444e4d23ec04fa23ca7ba71eeeb5f0d8e32317e80da1aee',
+      },
+      {
+        challenge: getChallenge(3),
+        keypair: keypair2.signKeypair,
+        signature:
+          'ed:57:a-random-string:145ca03359e5d1b0b69c0c6ac37f9a70455563cf63dcb7c84c4c1074d07b447c69cda667a13065f8406b693d2c6f6e928500cd69d35db9ce0f7fadef9f247000:41793c75c0ed6f06e444e4d23ec04fa23ca7ba71eeeb5f0d8e32317e80da1aee',
+      },
+      {
+        challenge: getChallenge(4),
+        keypair: keypair2.signKeypair,
+        signature:
+          'ed:898:a-random-string:ba817367449571daea98da129cc30e40732abe135ad718777ec38f4dffa518a8d976ce07f4997df8ada62227049e6bc302b093c2ea512fe8c1451824e7eb0000:41793c75c0ed6f06e444e4d23ec04fa23ca7ba71eeeb5f0d8e32317e80da1aee',
+      },
+      {
+        challenge: getChallenge(5),
+        keypair: keypair2.signKeypair,
+        signature:
+          'ed:8142:a-random-string:50b952fa74c08f6e7217c96018e0f6cea4116e82a780736bd5d358c8ca1139b5b995b88ddf3bc1b2f63c81de02b2c7405089628b59a9dea827cca20e5c200000:41793c75c0ed6f06e444e4d23ec04fa23ca7ba71eeeb5f0d8e32317e80da1aee',
+      },
+    ];
+
+    // const invalidCases = [
+    //   {
+    //     message: 'test',
+    //     keypair: keypair1.signKeypair,
+    //     error: 'TypeError: invalid privateKey length',
+    //   },
+    // ];
+
+    validCases.map((c) => {
+      return it(`should generate a signature for a challenge and difficulty ${c.challenge.challenge} (${c.challenge.difficulty})`, async () => {
+        const t0 = performance.now();
+        const challengeSignature = await generateChallengeSignature(
+          c.challenge,
+          c.keypair
+        );
+        const t1 = performance.now();
+        console.log(
+          `Call to generateChallengeSignature with difficulty ${
+            c.challenge.difficulty
+          } took ${t1 - t0} milliseconds.`
+        );
+        verifyChallengeSignature('', challengeSignature);
+        expect(challengeSignature).toEqual(c.signature);
+      });
+    });
+
+    // invalidCases.map((c) => {
+    //   return it(`should fail to encrypt and decrypt with sealCryptobox ${c.message}`, async () => {
+    //     try {
+    //       const enrypted = await sealCryptobox(
+    //         c.message,
+    //         toHex(c.keypair.publicKey)
+    //       );
+    //       // We can't check the encrypted payload, because it's always different
+    //       const decrypted = await openCryptobox(
+    //         new Uint8Array(fromHex(enrypted)) as any,
+    //         c.keypair.publicKey,
+    //         c.keypair.privateKey
+    //       );
+    //       expect(decrypted).toEqual(c.message);
+    //       expect(true).toBe(false); // We should never get here
+    //     } catch (error) {
+    //       expect(error.toString()).toBe(c.error);
+    //     }
+    //   });
+    // });
+  });
 });
