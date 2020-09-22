@@ -1,4 +1,4 @@
-import { ApiChallenge } from '../services/api.service';
+import { ApiChallenge } from '../services/api/api.service';
 import {
   toHex,
   fromHex,
@@ -909,7 +909,7 @@ describe('crypto', () => {
             c.challenge.difficulty
           } took ${t1 - t0} milliseconds.`
         );
-        verifyChallengeSignature('', challengeSignature);
+        verifyChallengeSignature(challengeSignature);
         expect(challengeSignature).toEqual(c.signature);
       });
     });
